@@ -1,7 +1,7 @@
 #!/bin/bash
 #Note that if you change this you will also need to update the makefile
 INVENIO_DIR=/opt/invenio
-MYSQL_PASS=""
+MYSQL_PASS="invenio"
 WWW_USER=www-data
 WWW_SERVICE=apache2
 
@@ -9,7 +9,7 @@ echo "DANGER, WILL ROBINSON!
 
 This script is designed to replace any existing Invenio install. It will drop
 the old database and move the original invenio directory to a backup location.
-As such, it is quite possible it will destroy the existing install and leave 
+As such, it is quite possible it will destroy the existing install and leave
 you with a non-functioning version of Invenio. Please read through this script
 before running it, to make sure you are happy with what it is going to do.
 
@@ -75,7 +75,7 @@ cp -vf modules/miscutil/lib/build/lib.linux-x86_64-2.6/invenio/intbitset.so /opt
 chown $WWW_USER:$WWW_USER /opt/invenio/lib/python/invenio/intbitset.so
 
 make install-bootstrap
-make install-mathjax-plugin 
+make install-mathjax-plugin
 make install-jquery-plugins
 make install-jquery-tokeninput
 make install-plupload-plugin

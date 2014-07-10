@@ -15,8 +15,9 @@ aptitude install -y python-dev apache2-mpm-prefork \
               pstotext netpbm python-chardet sudo
 aptitude install -y sbcl cmucl pylint pychecker pyflakes \
               python-profiler python-epydoc libapache2-mod-xsendfile \
-              openoffice.org python-utidylib python-beautifulsoup
-apt-get install -y automake1.9 make
+              openoffice.org python-utidylib python-beautifulsoup \
+apt-get install -y automake1.9 make python-gnuplot python-openid \
+              python-magic ffmpeg libxml2-dev libxslt-dev
 #configure apache
 aptitude install ssl-cert
 mkdir /etc/apache2/ssl
@@ -28,7 +29,8 @@ mkdir /etc/apache2/ssl
 /usr/sbin/a2enmod ssl
 
 #These are required by below branch but not in reqs.txt
-pip install celery rq Flask-Script pyparsing numpy Babel workflow
+pip install celery rq Flask-Script pyparsing numpy Babel workflow \
+              pyRXP rauth pyPdf fixture
 
 #Check out next branch of invenio
 git config --global http.sslVerify false
@@ -40,7 +42,7 @@ git checkout tags/b2share-v2 -b bshare-v2
 #may need to remove libxml lines from requirements.txt
 pip install -r requirements.txt
 pip install -r requirements-extras.txt
-pip install -r requirements-flask.txt
+pip install -r requirements-flask.txt --allow-external=twill --allow-unverified=twill
 pip install -r requirements-flask-ext.txt
 
 #think these might be needed now

@@ -1,7 +1,7 @@
 #!/bin/bash
 #Note that if you change this you will also need to update the makefile
 INVENIO_DIR=/opt/invenio
-MYSQL_PASS="invenio"
+MYSQL_PASS=""
 WWW_USER=apache
 WWW_SERVICE=httpd
 
@@ -92,10 +92,10 @@ chown -R $WWW_USER:$WWW_USER $INVENIO_DIR
 if $confirm ; then
   read -p "About to drop invenio database; ctrl-c to abort"
 fi
-mysql -u root -p$MYSQL_PASS -e "drop database invenio;"
+mysql -u root --password=$MYSQL_PASS -e "drop database invenio;"
 echo "Creating new DB"
-mysql -u root -p$MYSQL_PASS -e "CREATE DATABASE invenio DEFAULT CHARACTER SET utf8;"
-mysql -u root -p$MYSQL_PASS -e "GRANT ALL PRIVILEGES ON invenio.*  TO root@localhost IDENTIFIED BY '$MYSQL_PASS';"
+mysql -u root --password=$MYSQL_PASS -e "CREATE DATABASE invenio DEFAULT CHARACTER SET utf8;"
+mysql -u root --password=$MYSQL_PASS -e "GRANT ALL PRIVILEGES ON invenio.*  TO root@localhost IDENTIFIED BY '$MYSQL_PASS';"
 # generate configuration file
 sudo -u $WWW_USER $INVENIO_DIR/bin/inveniocfg --update-all
 

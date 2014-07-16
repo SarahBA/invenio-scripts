@@ -6,7 +6,7 @@
 # Running the script takes close to 2 hours (installs many packages)
 # SEE ALSO the text at the end of this script
 
-INVENIO_DIR=/opt/invenio
+INVENIO_DIR=/tmp/opt/invenio
 MYSQL_PASS="invenio"
 WWW_USER=www-data
 WWW_SERVICE=apache2
@@ -34,7 +34,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-co
     html2text giflib-tools pstotext make sudo sbcl \
     pylint pychecker pyflakes python-profiler python-epydoc \
     libapache2-mod-xsendfile libmysqlclient-dev mysql-server \
-    mysql-client python-mysqldb postfix automake1.9 make python-gnuplot \
+    mysql-client python-mysqldb postfix automake1.9 make \
     python-openid python-magic ffmpeg libxml2-dev libxslt-dev \
     automake1.9 autoconf python-magic common-lisp-controller mediainfo \
     openoffice.org
@@ -59,6 +59,8 @@ git checkout tags/b2share-v2 -b bshare-v2
 
 echo "************ Installing Python dependencies"
 sudo easy_install -U distribute
+pip install --upgrade setuptools
+pip install --upgrade distribute
 pip install -r requirements.txt
 pip install -r requirements-extras.txt
 pip install -r requirements-flask.txt --allow-external=twill --allow-unverified=twill
@@ -113,14 +115,14 @@ autoconf
 make
 # install Invenio with symlink fix
 sudo make install
-sudo ln -s /opt/invenio/lib/python/invenio /usr/local/lib/python2.7/dist-packages/invenio
-sudo ln -s /opt/invenio/lib/python/invenio /usr/lib/python2.7/dist-packages/invenio
+sudo ln -s $INVENIO_DIR/lib/python/invenio /usr/local/lib/python2.7/dist-packages/invenio
+sudo ln -s $INVENIO_DIR/lib/python/invenio /usr/lib/python2.7/dist-packages/invenio
 sudo make install
-sudo ln -s /opt/invenio/lib/python/invenio /usr/local/lib/python2.7/dist-packages/invenio
-sudo ln -s /opt/invenio/lib/python/invenio /usr/lib/python2.7/dist-packages/invenio
+sudo ln -s $INVENIO_DIR/lib/python/invenio /usr/local/lib/python2.7/dist-packages/invenio
+sudo ln -s $INVENIO_DIR/lib/python/invenio /usr/lib/python2.7/dist-packages/invenio
 sudo make install
 # BUG: cyclic include
-sudo rm -rf /opt/invenio/lib/python/invenio/
+sudo rm -rf $INVENIO_DIR/lib/python/invenio/
 sudo make install
 
 echo "************ Installing invenio extras"
@@ -160,9 +162,9 @@ sudo -u $WWW_USER $INVENIO_DIR/bin/inveniocfg --update-all
 mysql -u root -D invenio --password=$MYSQL_PASS < collections.sql
 
 echo "************ Reconfigure Apache"
-sudo ln -s /opt/invenio/etc/apache/invenio-apache-vhost.conf \
+sudo ln -s $INVENIO_DIR/etc/apache/invenio-apache-vhost.conf \
     /etc/apache2/sites-available/invenio
-sudo ln -s /opt/invenio/etc/apache/invenio-apache-vhost-ssl.conf \
+sudo ln -s $INVENIO_DIR/etc/apache/invenio-apache-vhost-ssl.conf \
 	/etc/apache2/sites-available/invenio-ssl
 sudo /usr/sbin/a2dissite default
 sudo /usr/sbin/a2ensite invenio
@@ -176,18 +178,18 @@ cd /home/vagrant
 git clone https://github.com/EUDAT-B2SHARE/b2share.git
 (cd /home/vagrant/b2share && sudo ./deployment/deploy_overlay.sh)
 (cd /home/vagrant/ && sudo ./invenio-scripts/install/start-daemons-deb.sh)
-sudo -u $WWW_USER /opt/invenio/bin/inveniogc -guests -s5m -uadmin
+sudo -u $WWW_USER $INVENIO_DIR/bin/inveniogc -guests -s5m -uadmin
 
 sudo service $WWW_SERVICE restart
 
 echo
 echo "*** If you are configuring a development environment, you should:"
 echo "    1. disable the redis cache (SOME FUNCTIONS CANNOT RUN WITHOUT CACHE):"
-echo '       edit /opt/invenio/lib/python/invenio/config.py and set CFG_FLASK_CACHE_TYPE = "null"'
+echo '       edit $INVENIO_DIR/lib/python/invenio/config.py and set CFG_FLASK_CACHE_TYPE = "null"'
 echo "    2. reduce the number of apache processes:"
-echo '       edit /opt/invenio/etc/apache/invenio-apache-vhost.conf and replace "processes=5" with "processes=1"'
+echo '       edit $INVENIO_DIR/etc/apache/invenio-apache-vhost.conf and replace "processes=5" with "processes=1"'
 echo '    Restart'
 echo '    3. configure invenio processes to run automatically: '
-echo '       run sudo su -c "sudo -u apache /opt/invenio/bin/bibsched"'
+echo '       run sudo su -c "sudo -u apache $INVENIO_DIR/bin/bibsched"'
 echo '       wait for the UI to show up, then press A (switch to auto), wait, press Q (quit)'
 echo '    Restart'

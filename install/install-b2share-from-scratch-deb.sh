@@ -26,7 +26,7 @@ sudo pip install --upgrade pip
 echo "************ Installing install dependencies"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-confdef" install \
 	python-dev apache2-mpm-prefork ssl-cert python-simplejson \
-    mysql-server mysql-client python-mysqldb \
+    mysql-server mysql-client python-mysqldb findutils \
     python-libxml2 python-libxslt1 gnuplot poppler-utils \
     antiword catdoc wv html2text ppthtml xlhtml \
     clisp gettext libapache2-mod-wsgi unzip python-numpy \
@@ -65,7 +65,7 @@ pip install -r requirements.txt
 pip install -r requirements-extras.txt
 pip install -r requirements-flask.txt --allow-external=twill --allow-unverified=twill
 pip install -r requirements-flask-ext.txt
-pip install flower validate_email pyDNS
+pip install flower validate_email pyDNS MySQL-python
 sudo updatedb
 
 echo "************ Git clone invenio-scripts"

@@ -6,7 +6,7 @@
 # Running the script takes close to 2 hours (installs many packages)
 # SEE ALSO the text at the end of this script
 
-INVENIO_DIR=/tmp/opt/invenio
+export INVENIO_DIR=/tmp/opt/invenio
 MYSQL_PASS="invenio"
 WWW_USER=www-data
 WWW_SERVICE=apache2
@@ -14,7 +14,6 @@ WWW_SERVICE=apache2
 echo "************ Update Apt"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-confdef" update
 sudo su vagrant -c "touch /home/vagrant/.Xauthority"
-sudo updatedb
 
 echo "************ Installing wget, git other pre-install deps"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-confdef" install \
@@ -22,11 +21,12 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-co
 
 sudo pip install --upgrade setuptools
 sudo pip install --upgrade pip
+sudo pip install --upgrade distribute
 
 echo "************ Installing install dependencies"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-confdef" install \
 	python-dev apache2-mpm-prefork ssl-cert python-simplejson \
-    mysql-server mysql-client python-mysqldb findutils \
+    mysql-server python-mysqldb findutils \
     python-libxml2 python-libxslt1 gnuplot poppler-utils \
     antiword catdoc wv html2text ppthtml xlhtml \
     clisp gettext libapache2-mod-wsgi unzip python-numpy \
@@ -34,7 +34,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-co
     html2text giflib-tools pstotext make sudo sbcl \
     pylint pychecker pyflakes python-profiler python-epydoc \
     libapache2-mod-xsendfile libmysqlclient-dev mysql-server \
-    mysql-client python-mysqldb postfix automake1.9 make \
+    mysql-client postfix automake1.9 make \
     python-openid python-magic ffmpeg libxml2-dev libxslt-dev \
     automake1.9 autoconf python-magic common-lisp-controller mediainfo \
     openoffice.org
@@ -58,9 +58,6 @@ git fetch # just in case, to get then new tags
 git checkout tags/b2share-v2 -b bshare-v2
 
 echo "************ Installing Python dependencies"
-sudo easy_install -U distribute
-pip install --upgrade setuptools
-pip install --upgrade distribute
 pip install -r requirements.txt
 pip install -r requirements-extras.txt
 pip install -r requirements-flask.txt --allow-external=twill --allow-unverified=twill

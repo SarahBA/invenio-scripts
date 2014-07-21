@@ -50,7 +50,7 @@ chkconfig mysqld on
 /usr/bin/mysqladmin -u root --password=$MYSQLPASS -h localhost.localdomain password $MYSQLPASS
 
 git config --global http.sslVerify false
-git clone -v -b next https://github.com/EUDAT-B2SHARE/invenio.git
+git clone -v -b b2share-old https://github.com/EUDAT-B2SHARE/invenio.git
 
 cd invenio
 git fetch # just in case, to get then new tags

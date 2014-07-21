@@ -17,13 +17,13 @@ echo "************ Git clone invenio"
 # will be done by install-invenio-deps-rh.sh
 
 echo "************ Git clone invenio-scripts"
-git clone https://github.com/EUDAT-B2SHARE/invenio-scripts.git
+git clone -b b2share-old https://github.com/EUDAT-B2SHARE/invenio-scripts.git
 
 echo "************ Git clone b2share"
-git clone https://github.com/EUDAT-B2SHARE/b2share.git
+git clone -b b2share-old https://github.com/EUDAT-B2SHARE/b2share.git
 
 echo "************ Git clone b2share.wiki"
-git clone https://github.com/EUDAT-B2SHARE/b2share.wiki.git
+git clone -b b2share-old https://github.com/EUDAT-B2SHARE/b2share.wiki.git
 
 echo "************ Installing required OS dependencies"
 ./invenio-scripts/install/install-invenio-deps-rh.sh

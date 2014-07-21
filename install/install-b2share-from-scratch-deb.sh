@@ -6,7 +6,7 @@
 # Running the script takes close to 2 hours (installs many packages)
 # SEE ALSO the text at the end of this script
 
-INVENIO_DIR=/tmp/opt/invenio
+INVENIO_DIR=/opt/invenio
 export INVENIO_DIR
 MYSQL_PASS="invenio"
 WWW_USER=www-data

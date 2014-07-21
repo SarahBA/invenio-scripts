@@ -11,6 +11,7 @@ export INVENIO_DIR
 MYSQL_PASS="invenio"
 WWW_USER=www-data
 WWW_SERVICE=apache2
+BRANCH=b2share-old
 
 echo "************ Update Apt"
 sudo DEBIAN_FRONTEND=noninteractive apt-get -q -y -o Dpkg::Options::="--force-confdef" update
@@ -53,7 +54,7 @@ sudo /usr/sbin/a2enmod ssl
 echo "************ Git clone invenio"
 cd /home/vagrant/
 git config --global http.sslVerify false
-git clone -v -b next https://github.com/EUDAT-B2SHARE/invenio.git
+git clone -v -b $BRANCH https://github.com/EUDAT-B2SHARE/invenio.git
 cd /home/vagrant/invenio
 git fetch # just in case, to get then new tags
 git checkout tags/b2share-v2 -b bshare-v2
@@ -68,7 +69,7 @@ sudo updatedb
 
 echo "************ Git clone invenio-scripts"
 cd /home/vagrant/
-git clone https://github.com/EUDAT-B2SHARE/invenio-scripts.git
+git clone -b $BRANCH https://github.com/EUDAT-B2SHARE/invenio-scripts.git
 cp invenio-scripts/install/invenio.conf invenio/config/
 cp invenio-scripts/install/invenio-local.conf invenio/
 cp invenio-scripts/install/collections.sql invenio/
@@ -173,7 +174,7 @@ sudo /usr/sbin/a2enmod xsendfile
 
 echo "************ Deploying b2share overlay"
 cd /home/vagrant
-git clone https://github.com/EUDAT-B2SHARE/b2share.git
+git clone -b $BRANCH https://github.com/EUDAT-B2SHARE/b2share.git
 (cd /home/vagrant/b2share && ./deployment/deploy_overlay.sh $INVENIO_DIR)
 (cd /home/vagrant/ && sudo ./invenio-scripts/install/start-daemons-deb.sh $INVENIO_DIR)
 sudo -u $WWW_USER $INVENIO_DIR/bin/inveniogc -guests -s5m -uadmin

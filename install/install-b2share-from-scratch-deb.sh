@@ -6,7 +6,8 @@
 # Running the script takes close to 2 hours (installs many packages)
 # SEE ALSO the text at the end of this script
 
-export INVENIO_DIR=/tmp/opt/invenio
+INVENIO_DIR=/tmp/opt/invenio
+export INVENIO_DIR
 MYSQL_PASS="invenio"
 WWW_USER=www-data
 WWW_SERVICE=apache2
@@ -173,8 +174,8 @@ sudo /usr/sbin/a2enmod xsendfile
 echo "************ Deploying b2share overlay"
 cd /home/vagrant
 git clone https://github.com/EUDAT-B2SHARE/b2share.git
-(cd /home/vagrant/b2share && sudo ./deployment/deploy_overlay.sh)
-(cd /home/vagrant/ && sudo ./invenio-scripts/install/start-daemons-deb.sh)
+(cd /home/vagrant/b2share && ./deployment/deploy_overlay.sh $INVENIO_DIR)
+(cd /home/vagrant/ && sudo ./invenio-scripts/install/start-daemons-deb.sh $INVENIO_DIR)
 sudo -u $WWW_USER $INVENIO_DIR/bin/inveniogc -guests -s5m -uadmin
 
 sudo service $WWW_SERVICE restart
@@ -182,11 +183,11 @@ sudo service $WWW_SERVICE restart
 echo
 echo "*** If you are configuring a development environment, you should:"
 echo "    1. disable the redis cache (SOME FUNCTIONS CANNOT RUN WITHOUT CACHE):"
-echo '       edit $INVENIO_DIR/lib/python/invenio/config.py and set CFG_FLASK_CACHE_TYPE = "null"'
+echo "       edit $INVENIO_DIR/lib/python/invenio/config.py and set CFG_FLASK_CACHE_TYPE = \"null\""
 echo "    2. reduce the number of apache processes:"
-echo '       edit $INVENIO_DIR/etc/apache/invenio-apache-vhost.conf and replace "processes=5" with "processes=1"'
+echo "       edit $INVENIO_DIR/etc/apache/invenio-apache-vhost.conf and replace \"processes=5\" with \"processes=1\""
 echo '    Restart'
 echo '    3. configure invenio processes to run automatically: '
-echo '       run sudo su -c "sudo -u apache $INVENIO_DIR/bin/bibsched"'
+echo "       run sudo su -c \"sudo -u apache $INVENIO_DIR/bin/bibsched\""
 echo '       wait for the UI to show up, then press A (switch to auto), wait, press Q (quit)'
 echo '    Restart'
